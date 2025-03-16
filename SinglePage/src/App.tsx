@@ -12,8 +12,8 @@ function App() {
   const [timeQuantum, setTimeQuantum] = useState<number>(4); // Default value 4
 
   // Handler to update the selected algorithms
-  const handleSelectAlgorithms = (algorithms: string[]) => {
-    setSelectedAlgorithms(algorithms);
+  const handleSelectAlgorithms = (selected: string[]) => {
+    setSelectedAlgorithms(selected);
   };
 
   // Handler to update the number of processes
@@ -28,15 +28,18 @@ function App() {
 
   return (
     <div className="m-3">
-      <h1>Algorithm Simulation</h1>
+      <h1>CPU Scheduling Simulation</h1>
       <AlgorithmSelection
+        selectedAlgorithms={selectedAlgorithms}
         onSelectAlgorithms={handleSelectAlgorithms}
         numProcesses={numProcesses}
         onProcessChange={handleProcessChange}
         timeQuantum={timeQuantum}
         onTimeQuantumChange={handleTimeQuantumChange}
       />
-      <div className="mt-4">
+      <div className="mt-3">
+        <h3>Number of Processes: {numProcesses}</h3>
+        <h3>Time Quantum for Round Robin: {timeQuantum}</h3>
         <h3>Selected Algorithms:</h3>
         <ul>
           {selectedAlgorithms.length > 0 ? (
@@ -45,8 +48,6 @@ function App() {
             <p>No algorithms selected yet.</p>
           )}
         </ul>
-        <h3>Number of Processes: {numProcesses}</h3>
-        <h3>Time Quantum for Round Robin: {timeQuantum}</h3>
       </div>
     </div>
   );

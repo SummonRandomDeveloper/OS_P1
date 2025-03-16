@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent } from "react";
 
 // Interface for Algorithm Selection Props
 interface AlgorithmSelectionProps {
+  selectedAlgorithms: string[];
   onSelectAlgorithms: (selectedAlgorithms: string[]) => void;
   numProcesses: number;
   onProcessChange: (numProcesses: number) => void;
@@ -11,51 +12,39 @@ interface AlgorithmSelectionProps {
 
 // Functional Component for Algorithm Selection
 function AlgorithmSelection({
+  selectedAlgorithms,
   onSelectAlgorithms,
   numProcesses,
   onProcessChange,
   timeQuantum,
   onTimeQuantumChange,
 }: AlgorithmSelectionProps) {
-  const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>([]);
-
-  // Handle checkbox selection and updating state
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const algorithm = event.target.value;
-    setSelectedAlgorithms((prevSelected) =>
-      event.target.checked
-        ? [...prevSelected, algorithm]
-        : prevSelected.filter((algo) => algo !== algorithm)
-    );
+    const updatedSelected = event.target.checked
+      ? [...selectedAlgorithms, algorithm]
+      : selectedAlgorithms.filter((algo) => algo !== algorithm);
+    onSelectAlgorithms(updatedSelected);
   };
 
-  // Handle process count change
-  const handleProcessChangeInput = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleProcessChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     onProcessChange(Number(event.target.value));
   };
 
-  // Handle time quantum change (always visible for RR)
   const handleTimeQuantumChangeInput = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: ChangeEvent<HTMLInputElement>
   ) => {
     onTimeQuantumChange(Number(event.target.value));
   };
 
-  // Handle submit form
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (selectedAlgorithms.length > 0 && numProcesses > 0) {
-      onSelectAlgorithms(selectedAlgorithms);
+    if (numProcesses > 0) {
       console.log("Selected Algorithms:", selectedAlgorithms);
       console.log("Number of Processes:", numProcesses);
       console.log("Time Quantum for RR:", timeQuantum);
-    } else {
-      alert(
-        "Please select at least one algorithm and enter the number of processes."
-      );
     }
+    return null;
   };
 
   return (
@@ -68,6 +57,7 @@ function AlgorithmSelection({
             className="form-check-input"
             value="fifo"
             id="fifo"
+            checked={selectedAlgorithms.includes("fifo")}
             onChange={handleCheckboxChange}
           />
           <label className="form-check-label" htmlFor="fifo">
@@ -80,6 +70,7 @@ function AlgorithmSelection({
             className="form-check-input"
             value="sjf"
             id="sjf"
+            checked={selectedAlgorithms.includes("sjf")}
             onChange={handleCheckboxChange}
           />
           <label className="form-check-label" htmlFor="sjf">
@@ -92,6 +83,7 @@ function AlgorithmSelection({
             className="form-check-input"
             value="stcf"
             id="stcf"
+            checked={selectedAlgorithms.includes("stcf")}
             onChange={handleCheckboxChange}
           />
           <label className="form-check-label" htmlFor="stcf">
@@ -104,6 +96,7 @@ function AlgorithmSelection({
             className="form-check-input"
             value="rr"
             id="rr"
+            checked={selectedAlgorithms.includes("rr")}
             onChange={handleCheckboxChange}
           />
           <label className="form-check-label" htmlFor="rr">
@@ -116,6 +109,7 @@ function AlgorithmSelection({
             className="form-check-input"
             value="mlfq"
             id="mlfq"
+            checked={selectedAlgorithms.includes("mlfq")}
             onChange={handleCheckboxChange}
           />
           <label className="form-check-label" htmlFor="mlfq">
@@ -128,31 +122,34 @@ function AlgorithmSelection({
         <label htmlFor="numProcesses" className="form-label">
           Number of Processes
         </label>
-        <input
-          type="number"
-          className="form-control"
-          id="numProcesses"
-          value={numProcesses}
-          onChange={handleProcessChangeInput}
-          min="1"
-          placeholder="Enter number of processes"
-        />
+        <div className="col-md-3">
+          <input
+            type="number"
+            className="form-control"
+            id="numProcesses"
+            value={numProcesses}
+            onChange={handleProcessChangeInput}
+            min="1"
+            placeholder="Enter number of processes"
+          />
+        </div>
       </div>
 
-      {/* Time Quantum field always visible */}
       <div className="mb-3">
         <label htmlFor="timeQuantum" className="form-label">
           Time Quantum (For Round Robin)
         </label>
-        <input
-          type="number"
-          className="form-control"
-          id="timeQuantum"
-          value={timeQuantum}
-          onChange={handleTimeQuantumChangeInput}
-          min="1"
-          placeholder="Enter Time Quantum"
-        />
+        <div className="col-md-3">
+          <input
+            type="number"
+            className="form-control"
+            id="timeQuantum"
+            value={timeQuantum}
+            onChange={handleTimeQuantumChangeInput}
+            min="1"
+            placeholder="Enter Time Quantum"
+          />
+        </div>
       </div>
 
       <button type="submit" className="btn btn-primary">
