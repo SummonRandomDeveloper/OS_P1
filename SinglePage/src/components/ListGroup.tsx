@@ -14,10 +14,6 @@ function ListGroup({ items, heading, onSelectItem }: ListGroupProps) {
     items.length === 0 && <p>No Algorithms Available</p>;
   };
 
-  const PrintItem = (item: string) => {
-    console.log(item);
-  };
-
   return (
     <>
       <h1>{heading}</h1>

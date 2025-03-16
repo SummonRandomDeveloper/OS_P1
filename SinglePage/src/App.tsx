@@ -1,27 +1,53 @@
-import Message from "./components/Message";
-import ListGroup from "./components/ListGroup";
+import { useState } from "react";
+import AlgorithmSelection from "./components/AlgorithmSelection";
 
 function App() {
-  const items = [
-    "FIFO (First In First Out)",
-    "SJF (Shortest Job First)",
-    "STCF (Shortest Time-to-Completion First)",
-    "RR (Round Robin)",
-    "MLFQ (Multi-Level Feedback Queue)",
-  ];
+  // State to store the selected algorithms
+  const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>([]);
 
-  const handleSelectItem = (item: string) => {
-    console.log(item);
+  // State to store the number of processes
+  const [numProcesses, setNumProcesses] = useState<number>(5);
+
+  // State to store the time quantum (for Round Robin)
+  const [timeQuantum, setTimeQuantum] = useState<number>(4); // Default value 4
+
+  // Handler to update the selected algorithms
+  const handleSelectAlgorithms = (algorithms: string[]) => {
+    setSelectedAlgorithms(algorithms);
   };
 
-  // An alternate way of calling it is return <div><Message></Message></div>
+  // Handler to update the number of processes
+  const handleProcessChange = (num: number) => {
+    setNumProcesses(num);
+  };
+
+  // Handler to update the time quantum
+  const handleTimeQuantumChange = (timeQuantum: number) => {
+    setTimeQuantum(timeQuantum);
+  };
+
   return (
-    <div>
-      <ListGroup
-        items={items}
-        heading={"Aglorithms"}
-        onSelectItem={handleSelectItem}
+    <div className="m-3">
+      <h1>Algorithm Simulation</h1>
+      <AlgorithmSelection
+        onSelectAlgorithms={handleSelectAlgorithms}
+        numProcesses={numProcesses}
+        onProcessChange={handleProcessChange}
+        timeQuantum={timeQuantum}
+        onTimeQuantumChange={handleTimeQuantumChange}
       />
+      <div className="mt-4">
+        <h3>Selected Algorithms:</h3>
+        <ul>
+          {selectedAlgorithms.length > 0 ? (
+            selectedAlgorithms.map((algo, index) => <li key={index}>{algo}</li>)
+          ) : (
+            <p>No algorithms selected yet.</p>
+          )}
+        </ul>
+        <h3>Number of Processes: {numProcesses}</h3>
+        <h3>Time Quantum for Round Robin: {timeQuantum}</h3>
+      </div>
     </div>
   );
 }
