@@ -1,26 +1,40 @@
-function ListGroup() {
-  const items = [
-    "FIFO (First In First Out)",
-    "SJF (Shortest Job First)",
-    "STCF (Shortest Time-to-Completion First)",
-    "RR (Round Robin)",
-    "MLFQ (Multi-Level Feedback Queue)",
-  ];
+import { MouseEvent, useState } from "react";
+
+interface ListGroupProps {
+  items: string[];
+  heading: string;
+  onSelectItem: (item: string) => void;
+}
+
+function ListGroup({ items, heading, onSelectItem }: ListGroupProps) {
+  // Hook
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const GetMessage = () => {
     items.length === 0 && <p>No Algorithms Available</p>;
   };
 
+  const PrintItem = (item: string) => {
+    console.log(item);
+  };
+
   return (
     <>
-      <h1>List</h1>
+      <h1>{heading}</h1>
       {GetMessage()}
       <ul className="list-group">
         {items.map((item, index) => (
           <li
-            className="list-group-item"
+            className={
+              selectedIndex == index
+                ? "list-group-item active"
+                : "list-group-item"
+            }
             key={item}
-            onClick={() => console.log(item, index + 1)}
+            onClick={() => {
+              setSelectedIndex(index);
+              onSelectItem(item);
+            }}
           >
             {item}
           </li>
