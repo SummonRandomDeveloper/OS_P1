@@ -88,18 +88,6 @@ function App() {
       <div className="mt-4">
         <h4 className="mt-2">Number of Processes: {numProcesses}</h4>
         <h4 className="mt-2">Time Quantum for Round Robin: {timeQuantum}</h4>
-        <h4 className="mt-2">Selected Algorithms:</h4>
-        <ul>
-          {selectedAlgorithms.length > 0 ? (
-            selectedAlgorithms.map((algo, index) => (
-              <li className="mt-2" key={index}>
-                {algo}
-              </li>
-            ))
-          ) : (
-            <h5 className="mt-2">No algorithms selected yet.</h5>
-          )}
-        </ul>
       </div>
       {processes.length > 0 && (
         <div className="mt-4">

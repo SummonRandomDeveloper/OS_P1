@@ -113,3 +113,31 @@ input[type="number"]:focus {
   border-color: #3498db;
   box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
+
+.gantt-chart {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.gantt-bar {
+  height: 30px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2px;
+  border-radius: 4px;
+}
+
+.gantt-axis {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.gantt-tick {
+  width: 20px;
+  text-align: center;
+  font-size: 12px;
+}
