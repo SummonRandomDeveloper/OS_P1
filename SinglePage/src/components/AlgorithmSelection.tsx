@@ -119,7 +119,7 @@ function AlgorithmSelection({
         <label htmlFor="numProcesses" className="form-label">
           Number of Processes
         </label>
-        <div className="col-md-3">
+        <div className="col-md-2">
           <input
             type="number"
             className="form-control"
@@ -136,7 +136,7 @@ function AlgorithmSelection({
         <label htmlFor="timeQuantum" className="form-label">
           Time Quantum (For Round Robin)
         </label>
-        <div className="col-md-3">
+        <div className="col-md-2">
           <input
             type="number"
             className="form-control"
