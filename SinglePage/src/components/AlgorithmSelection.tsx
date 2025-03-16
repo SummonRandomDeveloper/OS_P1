@@ -8,6 +8,7 @@ interface AlgorithmSelectionProps {
   onProcessChange: (numProcesses: number) => void;
   timeQuantum: number;
   onTimeQuantumChange: (timeQuantum: number) => void;
+  onFormSubmit: () => void;
 }
 
 // Functional Component for Algorithm Selection
@@ -18,6 +19,7 @@ function AlgorithmSelection({
   onProcessChange,
   timeQuantum,
   onTimeQuantumChange,
+  onFormSubmit,
 }: AlgorithmSelectionProps) {
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const algorithm = event.target.value;
@@ -39,12 +41,7 @@ function AlgorithmSelection({
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    if (numProcesses > 0) {
-      console.log("Selected Algorithms:", selectedAlgorithms);
-      console.log("Number of Processes:", numProcesses);
-      console.log("Time Quantum for RR:", timeQuantum);
-    }
-    return null;
+    onFormSubmit(); // Call the callback function on form submit
   };
 
   return (

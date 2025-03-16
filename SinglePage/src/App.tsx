@@ -26,6 +26,14 @@ function App() {
     setTimeQuantum(timeQuantum);
   };
 
+  // Hander for when the AlgorithmSelection Form is submitted.
+  const handleFormSubmit = () => {
+    console.log("Form submitted!");
+    console.log("Selected Algorithms:", selectedAlgorithms);
+    console.log("Number of Processes:", numProcesses);
+    console.log("Time Quantum for RR:", timeQuantum);
+  };
+
   return (
     <div className="m-3">
       <h1>CPU Scheduling Simulation</h1>
@@ -36,6 +44,7 @@ function App() {
         onProcessChange={handleProcessChange}
         timeQuantum={timeQuantum}
         onTimeQuantumChange={handleTimeQuantumChange}
+        onFormSubmit={handleFormSubmit}
       />
       <div className="mt-3">
         <h3>Number of Processes: {numProcesses}</h3>
