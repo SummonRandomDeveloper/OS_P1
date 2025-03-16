@@ -46,8 +46,8 @@ function AlgorithmSelection({
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="mb-3">
-        <h3>Select Algorithms</h3>
+      <div className="mb-4">
+        <h3 className="mb-2">Select Algorithms</h3>
         <div className="form-check">
           <input
             type="checkbox"

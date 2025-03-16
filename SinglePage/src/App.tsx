@@ -47,15 +47,19 @@ function App() {
         onTimeQuantumChange={handleTimeQuantumChange}
         onFormSubmit={handleFormSubmit}
       />
-      <div className="mt-3">
-        <h3>Number of Processes: {numProcesses}</h3>
-        <h3>Time Quantum for Round Robin: {timeQuantum}</h3>
-        <h3>Selected Algorithms:</h3>
+      <div className="mt-4">
+        <h3 className="mt-2">Number of Processes: {numProcesses}</h3>
+        <h3 className="mt-2">Time Quantum for Round Robin: {timeQuantum}</h3>
+        <h3 className="mt-2">Selected Algorithms:</h3>
         <ul>
           {selectedAlgorithms.length > 0 ? (
-            selectedAlgorithms.map((algo, index) => <li key={index}>{algo}</li>)
+            selectedAlgorithms.map((algo, index) => (
+              <li className="mt-2" key={index}>
+                {algo}
+              </li>
+            ))
           ) : (
-            <p>No algorithms selected yet.</p>
+            <h5 className="mt-2">No algorithms selected yet.</h5>
           )}
         </ul>
       </div>
