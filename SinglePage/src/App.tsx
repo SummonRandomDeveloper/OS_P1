@@ -6,6 +6,7 @@ import STCF from "./components/STCF";
 import RR from "./components/RR";
 import MLFQ from "./components/MFLQ";
 import "./App.css";
+import AverageEndTimeChart from "./components/AverageEndTimeChart";
 
 interface Process {
   pid: number;
@@ -72,6 +73,13 @@ function App() {
   // Predefined order of algorithms
   const algorithmOrder = ["fifo", "sjf", "stcf", "rr", "mlfq"];
 
+  const averageEndTimes = {
+    fifo: 12.5,
+    sjf: 10.2,
+    mlfq: 12.1,
+    rr: 13.7,
+  };
+
   // Sort selected algorithms based on the predefined order (Activates automatically on rerender)
   const sortedAlgorithms = selectedAlgorithms.sort((a, b) => {
     return algorithmOrder.indexOf(a) - algorithmOrder.indexOf(b);
@@ -125,6 +133,10 @@ function App() {
       {selectedAlgorithms.includes("mlfq") && (
         <MLFQ processes={processes} timeQuantum={timeQuantum} />
       )}
+      <div className="mt-4">
+        <h4>Average End Times</h4>
+        <AverageEndTimeChart averageEndTimes={averageEndTimes} />
+      </div>
     </div>
   );
 }
