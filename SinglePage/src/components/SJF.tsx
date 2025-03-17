@@ -60,9 +60,24 @@ const SJF: FC<SJFProps> = ({ processes }) => {
     setSchedule(newSchedule);
   }, [processes]);
 
-  // Calculate the total timeline length
-  const totalLength =
-    schedule.length > 0 ? schedule[schedule.length - 1].endTime : 0;
+  // Start by saying the biggest end time is 0
+  let biggestEndTime = 0;
+
+  // Now, let's go through each process and see if it ends later than the current biggest
+  for (let i = 0; i < schedule.length; i++) {
+    const process = schedule[i]; // This is the current process we're looking at
+    const processEndTime = process.endTime; // This is when the current process ends
+
+    // Compare this process's end time to the biggest end time we've found so far
+    if (processEndTime > biggestEndTime) {
+      // If it's bigger, make this the new biggest end time
+      biggestEndTime = processEndTime;
+    }
+  }
+
+  // At the end, biggestEndTime will be the longest time from all processes
+  const totalLength = biggestEndTime;
+
   const timeUnitWidth = 30; // 20 pixels per unit of time
 
   return (
@@ -76,6 +91,7 @@ const SJF: FC<SJFProps> = ({ processes }) => {
           height: "60px",
         }}
       >
+        {/* Time blocks for each process */}
         {schedule.map((process) => (
           <div
             key={process.pid}
@@ -132,14 +148,17 @@ const SJF: FC<SJFProps> = ({ processes }) => {
           </tr>
         </thead>
         <tbody>
-          {schedule.map((process) => (
-            <tr key={process.pid}>
-              <td>P{process.pid}</td>
-              <td>{process.startTime}</td>
-              <td>{process.endTime - process.startTime}</td>
-              <td>{process.endTime}</td>
-            </tr>
-          ))}
+          {/* Sort the schedule by PID */}
+          {schedule
+            .sort((a, b) => a.pid - b.pid)
+            .map((process) => (
+              <tr key={process.pid}>
+                <td>P{process.pid}</td>
+                <td>{process.startTime}</td>
+                <td>{process.endTime - process.startTime}</td>
+                <td>{process.endTime}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
