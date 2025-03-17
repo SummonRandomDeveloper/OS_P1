@@ -6,18 +6,18 @@ interface Process {
   burstTime: number;
 }
 
-interface FIFOProps {
+interface SJFProps {
   processes: Process[];
 }
 
-const FIFO: FC<FIFOProps> = ({ processes }) => {
+const SJF: FC<SJFProps> = ({ processes }) => {
   const [schedule, setSchedule] = useState<
     { pid: number; startTime: number; endTime: number }[]
   >([]);
 
   useEffect(() => {
     const sortedProcesses = [...processes].sort(
-      (a, b) => a.arrivalTime - b.arrivalTime
+      (a, b) => a.burstTime - b.burstTime
     );
     let currentTime = 0;
     const newSchedule: { pid: number; startTime: number; endTime: number }[] =
@@ -36,11 +36,11 @@ const FIFO: FC<FIFOProps> = ({ processes }) => {
   // Calculate the total timeline length
   const totalLength =
     schedule.length > 0 ? schedule[schedule.length - 1].endTime : 0;
-  const timeUnitWidth = 30; // 20 pixels per unit of time
+  const timeUnitWidth = 10; // Set the time unit width
 
   return (
     <div className="mt-4">
-      <h4>FIFO Simulation</h4>
+      <h4>SJF Simulation</h4>
       <div
         style={{
           display: "flex",
@@ -71,37 +71,41 @@ const FIFO: FC<FIFOProps> = ({ processes }) => {
 
       {/* Time Scale */}
       <div style={{ display: "flex", position: "relative" }}>
-        {Array.from({ length: Math.ceil(totalLength) + 1 }).map((_, index) => {
-          const timeValue = index;
-          return (
-            <div
-              key={timeValue}
-              style={{
-                position: "absolute",
-                left: timeValue * timeUnitWidth,
-                fontSize: "12px",
-                top: "5px",
-                width: "1px",
-                borderLeft: "1px solid black",
-                height: "10px",
-              }}
-            >
-              <span style={{ position: "absolute", top: "15px", left: "-4px" }}>
-                {timeValue}
-              </span>
-            </div>
-          );
-        })}
+        {Array.from({ length: Math.ceil(totalLength / 1) + 1 }).map(
+          (_, index) => {
+            const timeValue = index * 1; // Increment by 1
+            return (
+              <div
+                key={timeValue}
+                style={{
+                  position: "absolute",
+                  left: timeValue * timeUnitWidth,
+                  fontSize: "12px",
+                  top: "5px",
+                  width: "1px",
+                  borderLeft: "1px solid black",
+                  height: "10px",
+                }}
+              >
+                <span
+                  style={{ position: "absolute", top: "15px", left: "-4px" }}
+                >
+                  {timeValue}
+                </span>
+              </div>
+            );
+          }
+        )}
       </div>
 
       {/* Chart of PID, Start Time, Burst Time, End Time */}
       <table className="table mt-5">
         <thead>
           <tr>
-            <th>PID</th>
-            <th>Start Time</th>
-            <th>Burst Time</th>
-            <th>End Time</th>
+            <th style={{ width: "100px" }}>PID</th>
+            <th style={{ width: "120px" }}>Start Time</th>
+            <th style={{ width: "120px" }}>Burst Time</th>
+            <th style={{ width: "120px" }}>End Time</th>
           </tr>
         </thead>
         <tbody>
@@ -119,4 +123,4 @@ const FIFO: FC<FIFOProps> = ({ processes }) => {
   );
 };
 
-export default FIFO;
+export default SJF;
