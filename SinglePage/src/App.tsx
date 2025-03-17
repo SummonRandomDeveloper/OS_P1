@@ -3,8 +3,9 @@ import AlgorithmSelection from "./components/AlgorithmSelection";
 import FIFO from "./components/FIFO";
 import SJF from "./components/SJF";
 import STCF from "./components/STCF";
-import "./App.css";
 import RR from "./components/RR";
+import MLFQ from "./components/MFLQ";
+import "./App.css";
 
 interface Process {
   pid: number;
@@ -120,6 +121,9 @@ function App() {
       {selectedAlgorithms.includes("stcf") && <STCF processes={processes} />}
       {selectedAlgorithms.includes("rr") && (
         <RR processes={processes} timeQuantum={timeQuantum} />
+      )}
+      {selectedAlgorithms.includes("mlfq") && (
+        <MLFQ processes={processes} timeQuantum={timeQuantum} />
       )}
     </div>
   );
