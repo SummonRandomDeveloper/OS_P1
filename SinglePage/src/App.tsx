@@ -76,8 +76,9 @@ function App() {
   const averageEndTimes = {
     fifo: 12.5,
     sjf: 10.2,
-    mlfq: 12.1,
+    stcf: 11.0,
     rr: 13.7,
+    mlfq: 12.1,
   };
 
   // Sort selected algorithms based on the predefined order (Activates automatically on rerender)
