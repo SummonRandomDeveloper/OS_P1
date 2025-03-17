@@ -1,8 +1,9 @@
 import { useState } from "react";
 import AlgorithmSelection from "./components/AlgorithmSelection";
 import FIFO from "./components/FIFO";
-import "./App.css";
 import SJF from "./components/SJF";
+import STCF from "./components/STCF";
+import "./App.css";
 
 interface Process {
   pid: number;
@@ -115,6 +116,7 @@ function App() {
       )}
       {selectedAlgorithms.includes("fifo") && <FIFO processes={processes} />}
       {selectedAlgorithms.includes("sjf") && <SJF processes={processes} />}
+      {selectedAlgorithms.includes("stcf") && <STCF processes={processes} />}
     </div>
   );
 }
