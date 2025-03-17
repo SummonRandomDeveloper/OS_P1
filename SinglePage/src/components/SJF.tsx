@@ -16,19 +16,46 @@ const SJF: FC<SJFProps> = ({ processes }) => {
   >([]);
 
   useEffect(() => {
+    // Sort by arrival time initially
     const sortedProcesses = [...processes].sort(
-      (a, b) => a.burstTime - b.burstTime
+      (a, b) => a.arrivalTime - b.arrivalTime
     );
+
     let currentTime = 0;
+    // Remaining processes to schedule
+    const remainingProcesses = [...sortedProcesses];
     const newSchedule: { pid: number; startTime: number; endTime: number }[] =
       [];
 
-    sortedProcesses.forEach((process) => {
-      const startTime = Math.max(currentTime, process.arrivalTime);
-      const endTime = startTime + process.burstTime;
-      newSchedule.push({ pid: process.pid, startTime, endTime });
-      currentTime = endTime;
-    });
+    while (remainingProcesses.length > 0) {
+      // Get the processes that have arrived up to the current time
+      const readyProcesses = remainingProcesses.filter(
+        (process) => process.arrivalTime <= currentTime
+      );
+
+      if (readyProcesses.length > 0) {
+        // Sort the ready processes by burst time (shortest first)
+        readyProcesses.sort((a, b) => a.burstTime - b.burstTime);
+
+        // Select the shortest job to execute
+        const nextProcess = readyProcesses[0];
+        const startTime = Math.max(currentTime, nextProcess.arrivalTime);
+        const endTime = startTime + nextProcess.burstTime;
+
+        // Schedule this process
+        newSchedule.push({ pid: nextProcess.pid, startTime, endTime });
+        currentTime = endTime;
+
+        // Remove the selected process from the remaining processes
+        const processIndex = remainingProcesses.findIndex(
+          (process) => process.pid === nextProcess.pid
+        );
+        remainingProcesses.splice(processIndex, 1);
+      } else {
+        // If no processes are ready, advance time to the next process arrival
+        currentTime = Math.min(...remainingProcesses.map((p) => p.arrivalTime));
+      }
+    }
 
     setSchedule(newSchedule);
   }, [processes]);
@@ -36,7 +63,7 @@ const SJF: FC<SJFProps> = ({ processes }) => {
   // Calculate the total timeline length
   const totalLength =
     schedule.length > 0 ? schedule[schedule.length - 1].endTime : 0;
-  const timeUnitWidth = 10; // Set the time unit width
+  const timeUnitWidth = 30; // 20 pixels per unit of time
 
   return (
     <div className="mt-4">
@@ -71,41 +98,37 @@ const SJF: FC<SJFProps> = ({ processes }) => {
 
       {/* Time Scale */}
       <div style={{ display: "flex", position: "relative" }}>
-        {Array.from({ length: Math.ceil(totalLength / 1) + 1 }).map(
-          (_, index) => {
-            const timeValue = index * 1; // Increment by 1
-            return (
-              <div
-                key={timeValue}
-                style={{
-                  position: "absolute",
-                  left: timeValue * timeUnitWidth,
-                  fontSize: "12px",
-                  top: "5px",
-                  width: "1px",
-                  borderLeft: "1px solid black",
-                  height: "10px",
-                }}
-              >
-                <span
-                  style={{ position: "absolute", top: "15px", left: "-4px" }}
-                >
-                  {timeValue}
-                </span>
-              </div>
-            );
-          }
-        )}
+        {Array.from({ length: Math.ceil(totalLength) + 1 }).map((_, index) => {
+          const timeValue = index;
+          return (
+            <div
+              key={timeValue}
+              style={{
+                position: "absolute",
+                left: timeValue * timeUnitWidth,
+                fontSize: "12px",
+                top: "5px",
+                width: "1px",
+                borderLeft: "1px solid black",
+                height: "10px",
+              }}
+            >
+              <span style={{ position: "absolute", top: "15px", left: "-4px" }}>
+                {timeValue}
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       {/* Chart of PID, Start Time, Burst Time, End Time */}
       <table className="table mt-5">
         <thead>
           <tr>
-            <th style={{ width: "100px" }}>PID</th>
-            <th style={{ width: "120px" }}>Start Time</th>
-            <th style={{ width: "120px" }}>Burst Time</th>
-            <th style={{ width: "120px" }}>End Time</th>
+            <th>PID</th>
+            <th>Start Time</th>
+            <th>Burst Time</th>
+            <th>End Time</th>
           </tr>
         </thead>
         <tbody>
