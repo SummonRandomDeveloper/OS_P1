@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import AlgorithmSelection from "./components/AlgorithmSelection";
 import FIFO from "./components/FIFO";
 import SJF from "./components/SJF";
 import STCF from "./components/STCF";
 import RR from "./components/RR";
 import MLFQ from "./components/MFLQ";
-import "./App.css";
 import AverageEndTimeChart from "./components/AverageEndTimeChart";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import "./App.css";
 
 interface Process {
   pid: number;
@@ -15,6 +17,28 @@ interface Process {
 }
 
 function App() {
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  const generatePDF = async () => {
+    if (reportRef.current) {
+      // Use html2canvas to take a screenshot of the referenced element
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2, // Higher scale for better quality
+        useCORS: true, // Handles cross-origin images
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4"); // Portrait, millimeters, A4 size
+
+      // Calculate dimensions to fit the image into the PDF
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save("CPU_Scheduling_Report.pdf");
+    }
+  };
+
   // State to store the selected algorithms
   const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>([]);
 
@@ -98,45 +122,50 @@ function App() {
         onTimeQuantumChange={handleTimeQuantumChange}
         onFormSubmit={handleFormSubmit}
       />
-      <div className="mt-4">
-        <h4 className="mt-2">Number of Processes: {numProcesses}</h4>
-        <h4 className="mt-2">Time Quantum for Round Robin: {timeQuantum}</h4>
-      </div>
-      {processes.length > 0 && (
+      <button className="btn btn-primary mt-3" onClick={generatePDF}>
+        Export Report as PDF
+      </button>
+      <div ref={reportRef}>
         <div className="mt-4">
-          <h4 className="mt-2">Generated Processes:</h4>
-          <table className="table table-bordered mt-2">
-            <thead>
-              <tr>
-                <th>PID</th>
-                <th>Arrival Time</th>
-                <th>Burst Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {processes.map((process) => (
-                <tr key={process.pid}>
-                  <td className="col">{process.pid}</td>
-                  <td>{process.arrivalTime}</td>
-                  <td>{process.burstTime}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h4 className="mt-2">Number of Processes: {numProcesses}</h4>
+          <h4 className="mt-2">Time Quantum for Round Robin: {timeQuantum}</h4>
         </div>
-      )}
-      {selectedAlgorithms.includes("fifo") && <FIFO processes={processes} />}
-      {selectedAlgorithms.includes("sjf") && <SJF processes={processes} />}
-      {selectedAlgorithms.includes("stcf") && <STCF processes={processes} />}
-      {selectedAlgorithms.includes("rr") && (
-        <RR processes={processes} timeQuantum={timeQuantum} />
-      )}
-      {selectedAlgorithms.includes("mlfq") && (
-        <MLFQ processes={processes} timeQuantum={timeQuantum} />
-      )}
-      <div className="mt-4">
-        <h4>Average End Times</h4>
-        <AverageEndTimeChart averageEndTimes={averageEndTimes} />
+        {processes.length > 0 && (
+          <div className="mt-4">
+            <h4 className="mt-2">Generated Processes:</h4>
+            <table className="table table-bordered mt-2">
+              <thead>
+                <tr>
+                  <th>PID</th>
+                  <th>Arrival Time</th>
+                  <th>Burst Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {processes.map((process) => (
+                  <tr key={process.pid}>
+                    <td className="col">{process.pid}</td>
+                    <td>{process.arrivalTime}</td>
+                    <td>{process.burstTime}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {selectedAlgorithms.includes("fifo") && <FIFO processes={processes} />}
+        {selectedAlgorithms.includes("sjf") && <SJF processes={processes} />}
+        {selectedAlgorithms.includes("stcf") && <STCF processes={processes} />}
+        {selectedAlgorithms.includes("rr") && (
+          <RR processes={processes} timeQuantum={timeQuantum} />
+        )}
+        {selectedAlgorithms.includes("mlfq") && (
+          <MLFQ processes={processes} timeQuantum={timeQuantum} />
+        )}
+        <div className="mt-4">
+          <h4>Average End Times</h4>
+          <AverageEndTimeChart averageEndTimes={averageEndTimes} />
+        </div>
       </div>
     </div>
   );
