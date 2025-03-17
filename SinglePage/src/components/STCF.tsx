@@ -104,27 +104,27 @@ const STCF: FC<STCFProps> = ({ processes }) => {
       <h4>STCF Simulation</h4>
       {/* Timeline Display */}
       <div style={{ position: "relative", height: "60px" }}>
-        {schedule.map((segment, index) => (
-          <div
-            key={index}
-            style={{
-              position: "absolute",
-              left: segment.startTime * timeUnitWidth,
-              width: (segment.endTime - segment.startTime) * timeUnitWidth,
-              backgroundColor:
-                segment.pid === 0
-                  ? "#e0e0e0"
-                  : `hsl(${segment.pid * 40}, 70%, 70%)`,
-              border: "1px solid black",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {segment.pid !== 0 && `P${segment.pid}`}
-          </div>
-        ))}
+        {schedule
+          // Skip idle segments.
+          .filter((segment) => segment.pid !== 0)
+          .map((segment, index) => (
+            <div
+              key={index}
+              style={{
+                position: "absolute",
+                left: segment.startTime * timeUnitWidth,
+                width: (segment.endTime - segment.startTime) * timeUnitWidth,
+                backgroundColor: `hsl(${segment.pid * 40}, 70%, 70%)`,
+                border: "1px solid black",
+                height: "40px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {`P${segment.pid}`}
+            </div>
+          ))}
       </div>
 
       {/* Time Scale */}
