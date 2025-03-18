@@ -97,6 +97,7 @@ function App() {
   // Predefined order of algorithms
   const algorithmOrder = ["fifo", "sjf", "stcf", "rr", "mlfq"];
 
+  // Dummy values pull from algorithms later
   const averageEndTimes = {
     fifo: 12.5,
     sjf: 10.2,
